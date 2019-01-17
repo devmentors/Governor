@@ -13,10 +13,8 @@ namespace Governor.Server
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseConfiguration(new ConfigurationBuilder()
-                    .AddCommandLine(args)
-                    .Build())
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5020")
                 .Build();
     }
 }

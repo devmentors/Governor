@@ -1,8 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Governor.Server.Domain;
+using Governor.Shared;
 
-namespace Governor.Shared
+namespace Governor.Server.Builders
 {
     public class ServiceBuilder
     {

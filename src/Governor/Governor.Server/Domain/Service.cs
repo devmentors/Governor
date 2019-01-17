@@ -1,7 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 
-namespace Governor.Shared
+namespace Governor.Server.Domain
 {
     public class Service : IEquatable<Service>
     {

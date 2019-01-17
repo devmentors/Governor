@@ -1,4 +1,4 @@
-namespace Governor.Shared
+namespace Governor.Server.Options
 {
     public class ServiceOptions
     {

@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Governor.Server.Builders;
+using Governor.Server.Domain;
+using Governor.Server.Options;
+using Governor.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Governor.Shared
+namespace Governor.Server.Managers
 {
     public class ServiceManager
     {
@@ -62,6 +66,13 @@ namespace Governor.Shared
             _logger.LogInformation($"Killing a service: '{name}'.");
             GetServiceOrFail(name).Kill();
             _logger.LogInformation($"Killed a service: '{name}'.");
+        }
+        
+        public void KillAll()
+        {
+            _logger.LogInformation($"Killing all services");
+            _services.ToList().ForEach(s => s.Kill());
+            _logger.LogInformation($"Killed all services");
         }
 
         private Service GetServiceOrFail(string name)

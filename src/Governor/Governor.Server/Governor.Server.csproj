@@ -9,15 +9,13 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="0.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Governor.Client\Governor.Client.csproj" />
     <ProjectReference Include="..\Governor.Shared\Governor.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers" />
   </ItemGroup>
 
 </Project>

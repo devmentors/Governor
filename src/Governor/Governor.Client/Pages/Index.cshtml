@@ -1,7 +1,78 @@
 ﻿@page "/"
+@using Governor.Shared
+@inject HttpClient httpClient;
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper;
 
-<h1>Hello, world!</h1>
+@if (services == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>URL</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var service in services)
+        {
+            <tr>
+                <td><strong>@service.Name</strong></td>
+                <td>
+                    <a href="@service.Url">@service.Url</a>
+                </td>
+                <td>
+                    @if (@service.IsRunning)
+                    {
+                        <span class="badge badge-success">RUNNING</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-warning">STOPPED</span>
+                    }
+                </td>
+                <td>
+                    @if (@service.IsRunning)
+                    {
+                        <button type="button" class="btn btn-danger" onclick="@(() => KillAsync(@service))">Kill</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" onclick="@(() => StartAsync(@service))">Start</button>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table> 
 
-Welcome to your new app.
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@functions {
+
+    const string url = "http://localhost:5020/services";
+    ServiceInfo[] services;
+    
+    protected override async Task OnInitAsync()
+    {
+        services = await httpClient.GetJsonAsync<ServiceInfo[]>(url);
+    }
+
+    public async Task StartAsync(ServiceInfo service)
+    {
+        await httpClient.PostAsync($"{url}/{service.Name}/start", null);
+        service.IsRunning = true;
+        UriHelper.NavigateTo(service.Url);
+    }
+    
+    public async Task KillAsync(ServiceInfo service)
+    {
+        await httpClient.PostAsync($"{url}/{service.Name}/kill", null);
+        service.IsRunning = false;
+    }
+}

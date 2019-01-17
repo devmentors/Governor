@@ -6,15 +6,28 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using System.Linq;
 using System.Net.Mime;
+using Governor.Server.Builders;
+using Governor.Server.Domain;
+using Governor.Server.Managers;
+using Governor.Server.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace Governor.Server
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+            => Configuration = configuration;
+        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
+            services.AddSingleton<ServiceBuilder, ServiceBuilder>();
+            services.AddSingleton<ServiceManager, ServiceManager>();
+            
             services.AddMvc();
 
             services.AddResponseCompression(options =>
@@ -27,10 +40,12 @@ namespace Governor.Server
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, 
+            ServiceManager manager, IApplicationLifetime applicationLifetime)
         {
             app.UseResponseCompression();
+
+            manager.Init();
 
             if (env.IsDevelopment())
             {
@@ -41,6 +56,8 @@ namespace Governor.Server
             {
                 routes.MapRoute(name: "default", template: "{controller}/{action}/{id?}");
             });
+            
+            applicationLifetime.ApplicationStopped.Register(manager.KillAll);
 
             app.UseBlazor<Client.Startup>();
         }
