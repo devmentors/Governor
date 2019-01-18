@@ -6,6 +6,7 @@ namespace Governor.Server.Domain
 {
     public class Service : IEquatable<Service>
     {
+        public int Id { get; private set; }
         public string Name { get; }
         public Process Process { get; }
         public string Url { get; }
@@ -26,7 +27,6 @@ namespace Governor.Server.Domain
             Name = name;
             Process = process;
             Url = url;
-            
             process.Exited += ProcessOnExited;
         }
 
@@ -38,6 +38,7 @@ namespace Governor.Server.Domain
             }
 
             Process.Start();
+            Id = Process.Id;
             IsRunning = true;
         }
 
@@ -48,8 +49,8 @@ namespace Governor.Server.Domain
                 throw new InvalidOperationException();
             }
 
+            Id = 0;
             Process.Kill();
-            Process.WaitForExit();
             IsRunning = false;
         }
 
@@ -75,7 +76,7 @@ namespace Governor.Server.Domain
 
         private void ProcessOnExited(object sender, EventArgs e)
         {
-            IsRunning = false;
+//            IsRunning = false;
         }
     }
 }

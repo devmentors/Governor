@@ -50,29 +50,40 @@ namespace Governor.Server.Managers
             }
 
             _initialized = true;
-            _logger.LogInformation($"Initialized Service Manager. Services: " +
+            _logger.LogInformation($"Initialized Service Manager. Services:{Environment.NewLine}" +
                                    $"{string.Join(Environment.NewLine, _services.Select(s => $"'{s.Name}', URL: '{s.Url}'"))}");
         }
 
         public void Start(string name)
         {
+            var service = GetServiceOrFail(name);
             _logger.LogInformation($"Starting a service: '{name}'.");
-            GetServiceOrFail(name).Start();
-            _logger.LogInformation($"Started a service: '{name}'.");
+            service.Start();
+            _logger.LogInformation($"Started a service: '{name}' [PID: {service.Id}].");
         }
 
         public void Kill(string name)
         {
-            _logger.LogInformation($"Killing a service: '{name}'.");
-            GetServiceOrFail(name).Kill();
-            _logger.LogInformation($"Killed a service: '{name}'.");
+            var service = GetServiceOrFail(name);
+            var id = service.Id;
+            _logger.LogInformation($"Killing a service: '{name}' [PID: {id}].");
+            service.Kill();
+            _logger.LogInformation($"Killed a service: '{name}' [PID: {id}].");
         }
-        
+
         public void KillAll()
         {
-            _logger.LogInformation($"Killing all services");
-            _services.ToList().ForEach(s => s.Kill());
-            _logger.LogInformation($"Killed all services");
+            var servicesToKill = _services.Where(s => s.IsRunning).ToList();
+            if (!servicesToKill.Any())
+            {
+                _logger.LogInformation($"No running services found to be killed.");
+
+                return;
+            }
+            
+            _logger.LogInformation("Killing all services.");
+            servicesToKill.ForEach(s => s.Kill());
+            _logger.LogInformation("Killed all services.");
         }
 
         private Service GetServiceOrFail(string name)
