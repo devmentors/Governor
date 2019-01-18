@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Server", "Governor.Server\Governor.Server.csproj", "{4D7979C0-4C9B-4E56-8E5B-D386D5E9D8AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Server", "src\Governor.Server\Governor.Server.csproj", "{4D7979C0-4C9B-4E56-8E5B-D386D5E9D8AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Client", "Governor.Client\Governor.Client.csproj", "{4D8EADD8-FA74-4350-8EF9-41EC41CAEC11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Client", "src\Governor.Client\Governor.Client.csproj", "{4D8EADD8-FA74-4350-8EF9-41EC41CAEC11}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Shared", "Governor.Shared\Governor.Shared.csproj", "{FAE34A66-43BE-4DE3-B2B1-8DF01904816D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Governor.Shared", "src\Governor.Shared\Governor.Shared.csproj", "{FAE34A66-43BE-4DE3-B2B1-8DF01904816D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

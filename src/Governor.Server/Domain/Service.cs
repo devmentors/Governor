@@ -26,6 +26,8 @@ namespace Governor.Server.Domain
             Name = name;
             Process = process;
             Url = url;
+            
+            process.Exited += ProcessOnExited;
         }
 
         public void Start()
@@ -69,6 +71,11 @@ namespace Governor.Server.Domain
         public override int GetHashCode()
         {
             return (Name != null ? Name.GetHashCode() : 0);
+        }
+
+        private void ProcessOnExited(object sender, EventArgs e)
+        {
+            IsRunning = false;
         }
     }
 }

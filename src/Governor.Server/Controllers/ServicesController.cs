@@ -14,15 +14,22 @@ namespace Governor.Server.Controllers
         public ServicesController(ServiceManager manager)
             => _manager = manager;
 
-        public IEnumerable<ServiceInfo> GetServices()
-            => _manager.GetServices();
+        [HttpGet]
+        public ActionResult<IEnumerable<ServiceInfo>> GetServices()
+            => Ok(_manager.GetServices());
         
         [HttpPost("{name}/start")]
-        public void Start(string name)
-            => _manager.Start(name);
+        public ActionResult Start(string name)
+        {
+            _manager.Start(name);
+            return Ok();
+        }
 
         [HttpPost("{name}/kill")]
-        public void Kill(string name)
-            => _manager.Kill(name);
+        public ActionResult Kill(string name)
+        {
+            _manager.Kill(name);
+            return Ok();
+        }
     }
 }

@@ -11,6 +11,7 @@ using Governor.Server.Domain;
 using Governor.Server.Managers;
 using Governor.Server.Options;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Governor.Server
 {
@@ -23,13 +24,11 @@ namespace Governor.Server
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc().AddJsonOptions(o => o.SerializerSettings.Formatting = Formatting.Indented);
             services.AddOptions();
             services.Configure<ServicesOptions>(Configuration.GetSection("Services"));
             services.AddSingleton<ServiceBuilder, ServiceBuilder>();
             services.AddSingleton<ServiceManager, ServiceManager>();
-            
-            services.AddMvc();
-
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]

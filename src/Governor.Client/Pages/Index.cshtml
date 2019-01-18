@@ -1,9 +1,8 @@
 ﻿@page "/"
 @using Governor.Shared
-@inject HttpClient httpClient;
-@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper;
+@inject HttpClient HttpClient;
 
-@if (services == null)
+@if (_services == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -19,12 +18,12 @@ else
         </tr>
         </thead>
         <tbody>
-        @foreach (var service in services)
+        @foreach (var service in _services)
         {
             <tr>
                 <td><strong>@service.Name</strong></td>
                 <td>
-                    <a href="@service.Url">@service.Url</a>
+                    <a href="@service.Url" target="_blank">@service.Url</a>
                 </td>
                 <td>
                     @if (@service.IsRunning)
@@ -50,29 +49,38 @@ else
         }
         </tbody>
     </table> 
-
 }
 
 @functions {
 
-    const string url = "http://localhost:5020/services";
-    ServiceInfo[] services;
+    const string ApiUrl = "http://localhost:5020/services";
+    ServiceInfo[] _services;
     
     protected override async Task OnInitAsync()
     {
-        services = await httpClient.GetJsonAsync<ServiceInfo[]>(url);
+        _services = await HttpClient.GetJsonAsync<ServiceInfo[]>(ApiUrl);
+        await UpdateServicesAsync();
+    }
+
+    private async Task UpdateServicesAsync()
+    {
+        while (true)
+        {
+            _services = await HttpClient.GetJsonAsync<ServiceInfo[]>(ApiUrl);
+            StateHasChanged();
+            await Task.Delay(3000);
+        }
     }
 
     public async Task StartAsync(ServiceInfo service)
     {
-        await httpClient.PostAsync($"{url}/{service.Name}/start", null);
+        await HttpClient.PostAsync($"{ApiUrl}/{service.Name}/start", null);
         service.IsRunning = true;
-        UriHelper.NavigateTo(service.Url);
     }
     
     public async Task KillAsync(ServiceInfo service)
     {
-        await httpClient.PostAsync($"{url}/{service.Name}/kill", null);
+        await HttpClient.PostAsync($"{ApiUrl}/{service.Name}/kill", null);
         service.IsRunning = false;
     }
 }

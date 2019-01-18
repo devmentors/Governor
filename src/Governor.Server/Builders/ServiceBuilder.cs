@@ -8,7 +8,8 @@ namespace Governor.Server.Builders
 {
     public class ServiceBuilder
     {
-        public Service Build(string name, string directory, string filename, string arguments, string url = null)
+        public Service Build(string name, string directory, string filename, string arguments, string url = null,
+            bool sharedShell = true)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -27,15 +28,16 @@ namespace Governor.Server.Builders
 
             var process = new Process
             {
+                EnableRaisingEvents = true,
                 StartInfo =
                 {
                     WorkingDirectory = directory,
                     FileName = filename,
                     Arguments = arguments,
-                    UseShellExecute = RuntimeInformation.IsOSPlatform(OSPlatform.Windows),
+                    UseShellExecute = !sharedShell,
                     CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Normal
-                }
+                    WindowStyle = ProcessWindowStyle.Normal,
+                },
             };
 
             return new Service(name, process, url);

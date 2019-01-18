@@ -45,7 +45,7 @@ namespace Governor.Server.Managers
             foreach (var serviceOptions in _servicesOptions.Value)
             {
                 var service = _serviceBuilder.Build(serviceOptions.Name, serviceOptions.Directory,
-                    serviceOptions.FileName, serviceOptions.Arguments, serviceOptions.Url);
+                    serviceOptions.FileName, serviceOptions.Arguments, serviceOptions.Url, serviceOptions.SharedShell);
                 _services.Add(service);
             }
 
